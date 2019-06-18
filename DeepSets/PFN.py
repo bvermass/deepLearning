@@ -2,7 +2,7 @@
 Class that represents a particle flow network, as explained in https://arxiv.org/abs/1810.05165
 """
 
-from keras import Input, Model, callbacks, layers, backend
+from keras import Input, Model, callbacks, layers, backend as K
 import tensorflow as tf
 
 #include other parts of framework
@@ -17,7 +17,7 @@ from diagnosticPlotting import plotKerasMetricComparison
 #custom AUC metric 
 def auc( true_labels, predictions ):
     auc = tf.metrics.auc( true_labels,  predictions )[1]
-    backend.get_session().run( tf.local_variables_initializer() )
+    K.get_session().run( tf.local_variables_initializer() )
     return auc
 
 
@@ -75,7 +75,7 @@ class PFN:
         
         #apply summation in latent space
         def summation( x ):
-        	x = backend.sum( x, axis = 1 )
+        	x = K.sum( x, axis = 1 )
         	return x
         particleFlow_intermediate = layers.Lambda( summation, output_shape=None, mask=None, arguments=None)( particleFlow_intermediate )
         
@@ -119,6 +119,7 @@ class PFN:
             ),
             callbacks.ModelCheckpoint(
                 monitor = 'val_auc',
+                mode = 'max',
                 filepath = output_name,
                 save_best_only = True
             )
