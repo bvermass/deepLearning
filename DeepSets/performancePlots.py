@@ -1,13 +1,20 @@
+import os
 import numpy as np
 import uproot
 from keras import models, layers, Input, Model
 from keras import backend as K
 import matplotlib.pyplot as plt
+import tensorflow as tf
 
 
 from PFNSampleGenerator import PFNSampleGenerator
 from diagnosticPlotting import *
 
+#custom AUC metric 
+def auc( true_labels, predictions ):
+    auc = tf.metrics.auc( true_labels,  predictions )[1]
+    K.get_session().run( tf.local_variables_initializer() )
+    return auc
 
 
 def getOutputArray( sample_generator, size, model):
@@ -61,46 +68,16 @@ def plotShapeComparison( signal_training_outputs, background_training_outputs, s
     plt.clf() 
 
 
-def generateModel():
-    def summation(x):
-        x = K.sum( x, axis = 1 )
-        return x 
-
-    jet_size = 50
-    pfn_input = Input( shape = (jet_size, 11 ) )
-    pfn_intermediate = layers.Masking( mask_value = 0 )( pfn_input )
-    pfn_intermediate = layers.BatchNormalization()( pfn_intermediate )
-    pfn_intermediate = layers.TimeDistributed( layers.Dense( 128, activation = 'relu' ) )( pfn_intermediate )
-    pfn_intermediate = layers.BatchNormalization()( pfn_intermediate )
-    pfn_intermediate = layers.TimeDistributed( layers.Dense( 128, activation = 'relu' ) )( pfn_intermediate )
-    pfn_intermediate = layers.BatchNormalization()( pfn_intermediate )
-    pfn_intermediate = layers.TimeDistributed( layers.Dense( 256, activation = 'linear' ) )( pfn_intermediate )
-    pfn_intermediate = layers.Lambda( summation, output_shape=None, mask=None, arguments=None)( pfn_intermediate )
-    
-    highlevel_input = Input( shape = (2, ) )
-    
-    merged_intermediate = layers.concatenate( [pfn_intermediate, highlevel_input], axis = -1 )
-    merged_intermediate = layers.BatchNormalization()( merged_intermediate )
-    merged_intermediate = layers.Dense( 128, activation = 'relu' )( merged_intermediate )
-    merged_intermediate = layers.BatchNormalization()( merged_intermediate )
-    merged_intermediate = layers.Dense( 128, activation = 'relu' )( merged_intermediate )
-    merged_output = layers.Dense( 1, activation = 'sigmoid' )( merged_intermediate )
-    model = Model( [pfn_input, highlevel_input] , merged_output )
-    return model 
-
-
-
 def makeOutputArrays():
-    f = uproot.open('/user/bvermass/public/2l2q_analysis/trees/HNLtagger/final/full_analyzer/mergedFile_randomized.root')
+    f = uproot.open('/user/bvermass/public/2l2q_analysis/trees/HNLtagger/final/full_analyzer/HNLtagger_muon_randomized.root')
     tree = f['HNLtagger_tree']
-    pfn_branch_names = [ '_JetConstituentPt', '_JetConstituentEta', '_JetConstituentPhi', '_JetConstituentdxy', '_JetConstituentdz', '_JetConstituentdxyErr', '_JetConstituentdzErr', '_JetConstituentNumberOfHits', '_JetConstituentNumberOfPixelHits', '_JetConstituentCharge', '_JetConstituentPdgId']
-    highlevel_branch_names = [ '_JetPt', '_JetEta' ]
+    pfn_branch_names = [ '_JetConstituentPt', '_JetConstituentEta', '_JetConstituentPhi', '_JetConstituentdxy', '_JetConstituentdz', '_JetConstituentdxyErr', '_JetConstituentdzErr', '_JetConstituentNumberOfHits', '_JetConstituentNumberOfPixelHits', '_JetConstituentCharge', '_JetConstituentPdgId', '_JetConstituentInSV']
+    highlevel_branch_names = [ '_JetPt', '_JetEta', '_SV_PVSVdist', '_SV_PVSVdist_2D', '_SV_ntracks', '_SV_mass', '_SV_pt', '_SV_eta', '_SV_phi', '_SV_normchi2' ]
     label_branch = '_JetIsFromHNL'
     
     
     sample_generator = PFNSampleGenerator( tree, pfn_branch_names, highlevel_branch_names, label_branch, validation_fraction = 0.4, test_fraction = 0.2 )
-    model = generateModel()
-    model.load_weights( '/user/bvermass/public/PFN/JetTagger/jetTagger_reliso_novtx.h5' )
+    model = models.load_model( '/user/bvermass/public/PFN/JetTagger/jetTagger_best_of_PFN_v1.h5', custom_objects = {'auc':auc})
     
     training_generator = sample_generator.trainingGenerator( 512 )
     training_outputs, training_labels = getOutputArray( training_generator, sample_generator.numberOfTrainingBatches( 512 ), model )
@@ -136,16 +113,15 @@ def outputName( sample_file ):
 
 
 def makeSampleArrays( sample_file, is_background):
-    pfn_branch_names = [ '_JetConstituentPt', '_JetConstituentEta', '_JetConstituentPhi', '_JetConstituentdxy', '_JetConstituentdz', '_JetConstituentdxyErr', '_JetConstituentdzErr', '_JetConstituentNumberOfHits', '_JetConstituentNumberOfPixelHits', '_JetConstituentCharge', '_JetConstituentPdgId']
-    highlevel_branch_names = [ '_JetPt', '_JetEta' ]
+    pfn_branch_names = [ '_JetConstituentPt', '_JetConstituentEta', '_JetConstituentPhi', '_JetConstituentdxy', '_JetConstituentdz', '_JetConstituentdxyErr', '_JetConstituentdzErr', '_JetConstituentNumberOfHits', '_JetConstituentNumberOfPixelHits', '_JetConstituentCharge', '_JetConstituentPdgId', '_JetConstituentInSV']
+    highlevel_branch_names = [ '_JetPt', '_JetEta', '_SV_PVSVdist', '_SV_PVSVdist_2D', '_SV_ntracks', '_SV_mass', '_SV_pt', '_SV_eta', '_SV_phi', '_SV_normchi2' ]
     label_branch = '_JetIsFromHNL'
     
     f = uproot.open( sample_file )
     tree = f['HNLtagger_tree']
     
     sample_generator = PFNSampleGenerator( tree, pfn_branch_names, highlevel_branch_names, label_branch, validation_fraction = 0.0, test_fraction = 0.0 )
-    model = generateModel()
-    model.load_weights( '/user/bvermass/public/PFN/JetTagger/jetTagger_reliso_novtx.h5' )
+    model = models.load_model( '/user/bvermass/public/PFN/JetTagger/jetTagger_best_of_PFN_v1.h5', custom_objects = {'auc':auc})
     
     generator = sample_generator.trainingGenerator( 512 )
     outputs, labels = getOutputArray( generator, sample_generator.numberOfTrainingBatches( 512 ), model )
@@ -262,6 +238,20 @@ if __name__ == '__main__':
     
     plotProcessRocCurves( bkg_output_map,  signal_output_map, 'processROC', log = False)
     plotProcessRocCurves( bkg_output_map,  signal_output_map, 'processROC_log', log = True)
+    
+    # clean up unnecessary files
+    os.remove('signal_validation_outputs.npy')
+    os.remove('signal_training_outputs.npy')
+    os.remove('background_validation_outputs.npy')
+    os.remove('background_training_outputs.npy')
+    for process in bkg_samples:
+        for sample in bkg_samples[process]:
+            os.remove( outputName( sample ) )
+
+    for process in signal_samples:
+        for sample in signal_samples[process]:
+            os.remove( outputName( sample ) )
+
     """
     #ROC curves 
     for signal_key in signal_output_map:
