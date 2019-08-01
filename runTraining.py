@@ -138,7 +138,7 @@ def submitTrainingJobs( configuration_file_name ):
 
             #evolve and mutate the generation
             generation = generation.newGeneration( fitness_func, target_size = configuration_file.population_size )
-            generation.mutate( 0.2, 2 )
+            generation.mutate( 0.3, 4 )
     
             configuration_list = generationToConfigurations( generation )
     
