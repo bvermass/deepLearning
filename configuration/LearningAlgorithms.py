@@ -28,3 +28,7 @@ class DenseNeuralNetworkConfiguration( Configuration ):
 @registerConfiguration
 class GradientBoostedForestConfiguration( Configuration ):
     _required_parameters = { 'number_of_trees', 'learning_rate', 'max_depth', 'min_child_weight', 'subsample', 'colsample_bytree', 'gamma', 'alpha' }
+
+@registerConfiguration
+class PFNConfiguration( Configuration ):
+    _required_parameters = { 'hidden_layers_latent', 'nodes_latent', 'dropout_latent', 'latent_space', 'hidden_layers_output', 'nodes_output', 'dropout_output', 'learning_rate', 'learning_rate_decay' }
