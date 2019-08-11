@@ -6,6 +6,7 @@ background_tree_name = 'bkgTree'
 
 #list of variables to be used in training (corresponding to branches in the tree)
 list_of_branches = [
+    '_gen_Nmass_parametrized',
     '_lPt', '_lEta', '_lPhi', '_ldxy', '_ldz', '_l3dIPSig', '_lrelIso', '_lptRel', '_lptRatio', '_lNumberOfPixelHits',
     '_JetPt', '_JetEta', '_JetPhi', '_JetMass', '_nJetConstituents', '_JetdxySum', '_JetdxySigSum', '_JetdzSum', '_JetdzSigSum', '_JetChargeSum',
     '_SV_ntracks', '_SV_PVSVdist_2D', '_SV_PVSVdist', '_SV_normchi2', '_SV_mass', '_SV_pt', '_SV_eta', '_SV_phi'
