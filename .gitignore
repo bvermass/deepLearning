@@ -2,3 +2,4 @@ watcher*
 trainModel.sh*
 output*
 scatterPlots*
+*.pyc
