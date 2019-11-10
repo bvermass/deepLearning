@@ -38,7 +38,7 @@ def submitTrainingPFNJob( configuration, number_of_threads, high_memory, root_fi
     configuration.toJSON( os.path.join( output_directory, model_name, 'configuration_' + model_name + '.json' ) )
     
     #submit this process 
-    return submitProcessJob( command_string, 'trainPFNModel.sh', wall_time = '24:00:00', num_threads = number_of_threads, high_memory = high_memory )
+    return submitProcessJob( command_string, 'trainPFNModel.sh', wall_time = '160:00:00', num_threads = number_of_threads, high_memory = high_memory )
 
 def submitTrainingPFNJobs( configuration_file_name ):
 
