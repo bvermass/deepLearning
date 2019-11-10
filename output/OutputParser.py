@@ -80,11 +80,11 @@ class OutputParser:
     
     def copyBestModelsOutput(self):
         best_model_directory = 'bestModels_{}'.format( self.analysisName() )
-        os.system('mkdir -p {}'.format( best_model_directory ) )
         for i, model in enumerate( self._AUC_map.items() ):
             if i >= 10:
                 break
-            os.system('cp -r {0}/{1} {2}/model_rank_{3}'.format( self._output_directory_name, model[0].name(), best_model_directory, i + 1 ) )
+            os.system('mkdir -p {0}/model_rank_{1}'.format( best_model_directory, i + 1 ) )
+            os.system('cp -r {0}/*/{1} {2}/model_rank_{3}'.format( self._output_directory_name, model[0].name(), best_model_directory, i + 1 ) )
 
 
     def bestModels(self):
