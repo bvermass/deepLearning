@@ -23,14 +23,14 @@ if test:
 
 else:
     parameter_values = {
-        'hidden_layers_latent' : [3, 4, 5],
-        'nodes_latent' : [128, 256],
-        'dropout_latent' : [0.2, 0.3, 0.5],
-        'latent_space' : [256, 512],
-        'hidden_layers_output' : [3, 4, 5],
-        'nodes_output' : [128, 256],
-        'dropout_output' : [0.2, 0.3, 0.5],
-        'learning_rate' : [0.1, 1],
+        'hidden_layers_latent' : [3],
+        'nodes_latent' : [128],
+        'dropout_latent' : [0.5],
+        'latent_space' : [512],
+        'hidden_layers_output' : [3],
+        'nodes_output' : [128],
+        'dropout_output' : [0.5],
+        'learning_rate' : [1],
         'learning_rate_decay' : [1]
     }
 
