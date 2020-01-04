@@ -52,7 +52,7 @@ class KerasClassifierTrainer():
             return None
 
 
-    def buildDenseClassifier( self, input_shape, number_of_hidden_layers = 5, units_per_layer = 256, activation_layer = layers.ReLU, dropout_first = True, dropout_all = False, dropout_rate = 0.5, batchnorm_first = True, batchnorm_hidden = False, batchnorm_before_activation = False ):
+    def buildDenseClassifier( self, input_shape, number_of_hidden_layers = 5, units_per_layer = 256, activation_layer = layers.PReLU, dropout_first = True, dropout_all = False, dropout_rate = 0.5, batchnorm_first = True, batchnorm_hidden = False, batchnorm_before_activation = False ):
 
         model = models.Sequential()
 
@@ -91,7 +91,7 @@ class KerasClassifierTrainer():
 
 
 
-    def buildDenseClassifierParameterShortCut( self, sample_input_shape, parameter_input_shape, number_of_hidden_layers = 5, units_per_layer = 256, activation_layer = layers.ReLU, dropout_first = True, dropout_all = False, dropout_rate = 0.5, batchnorm_first = True, batchnorm_hidden = False, batchnorm_before_activation = False ):
+    def buildDenseClassifierParameterShortCut( self, sample_input_shape, parameter_input_shape, number_of_hidden_layers = 5, units_per_layer = 256, activation_layer = layers.PReLU, dropout_first = True, dropout_all = False, dropout_rate = 0.5, batchnorm_first = True, batchnorm_hidden = False, batchnorm_before_activation = False ):
 
         sample_input = Input( shape = sample_input_shape )
         parameter_input = Input( shape = parameter_input_shape )

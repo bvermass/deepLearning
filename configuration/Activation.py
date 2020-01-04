@@ -6,7 +6,7 @@ class Activation():
 
     def __init__( self, activation_name ) :
         activationLayerDict = {
-            'relu' : keras.layers.ReLU,
+            #'relu' : keras.layers.ReLU,
             'prelu' : keras.layers.PReLU,
             'leakyrelu' : keras.layers.LeakyReLU,
             'elu' : keras.layers.ELU
