@@ -1,5 +1,5 @@
 #name of input root file
-root_file_name = '/user/bvermass/public/PFN/JetTagger/PFN_v5/HNLtagger_muon_randomized.root'
+root_file_name = '/user/bvermass/public/PFN/JetTagger/PFNe_v5/HNLtagger_electron_randomized.root'
 
 validation_fraction = 0.3
 test_fraction = 0.1
