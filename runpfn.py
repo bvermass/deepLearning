@@ -53,7 +53,7 @@ def submitTrainingPFNJobs( configuration_file_name ):
         sys.exit()
 
     #directory for job output
-    output_directory_name = '/user/bvermass/public/PFN/JetTagger/{}'.format( configuration_file_name.replace('input_', '').replace('.py', '') )
+    output_directory_name = '/user/bvermass/public/PFN/JetTagger/PFN_v8/{}'.format( configuration_file_name.replace('input_', '').replace('.py', '') )
 
     #Make list of PFN network configurations to process
     grid_scan_configuration = GridScanInputReader( configuration_file )

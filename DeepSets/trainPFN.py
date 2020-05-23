@@ -33,7 +33,6 @@ if __name__ == '__main__':
         configuration_dict['dropout_output'] = 0.5
         configuration_dict['learning_rate'] = 1
         configuration_dict['learning_rate_decay'] = 1
-        configuration_dict['activation_name'] = 'prelu'
     elif len( sys.argv ) == 11 :
         root_file_name = sys.argv[1]
         configuration_dict = {}
@@ -61,26 +60,26 @@ if __name__ == '__main__':
     sample = PFNSampleGenerator( tree, pfn_branch_names, highlevel_branch_names, label_branch, validation_fraction = 0.3, test_fraction = 0.1, parameter_branch_names = ['_gen_Nmass', '_gen_Nctau'], parameter_background_defaults = [0,0] )
 
     #set up the neural network with default arguments
-    network = PFN( (50, 13), ( 25, ), num_hidden_layers_latent = 3, nodes_per_layer_latent = 128, batch_normalization_latent = True, dropout_rate_latent = 0.5, latent_space_size = 256, num_hidden_layers_output = 3, nodes_per_layer_output = 128, batch_normalization_output = True, dropout_rate_output = 0.5, optimizer_name = 'Nadam', relative_learning_rate = 1, relative_learning_rate_decay = 1, activation_name = 'prelu' )
+    #network = PFN( (50, 13), ( 25, ), num_hidden_layers_latent = 3, nodes_per_layer_latent = 128, batch_normalization_latent = True, dropout_rate_latent = 0.5, latent_space_size = 256, num_hidden_layers_output = 3, nodes_per_layer_output = 128, batch_normalization_output = True, dropout_rate_output = 0.5, optimizer_name = 'Nadam', relative_learning_rate = 1, relative_learning_rate_decay = 1, activation_name = 'prelu' )
 
     
     #set up the neural network with default arguments
     #maybe resend Willem these changes I made on top of his
-    #network = PFN( (50, 13), ( 23, ),
-    #        num_hidden_layers_latent = configuration_dict['hidden_layers_latent'],
-    #        nodes_per_layer_latent = configuration_dict['nodes_latent'],
-    #        batch_normalization_latent = True,
-    #        dropout_rate_latent = configuration_dict['dropout_latent'],
-    #        latent_space_size = configuration_dict['latent_space'],
-    #        num_hidden_layers_output = configuration_dict['hidden_layers_output'],
-    #        nodes_per_layer_output = configuration_dict['nodes_latent'],
-    #        batch_normalization_output = True,
-    #        dropout_rate_output = configuration_dict['dropout_output'],
-    #        optimizer_name = 'Nadam',
-    #        relative_learning_rate = configuration_dict['learning_rate'],
-    #        relative_learning_rate_decay = configuration_dict['learning_rate_decay']
-    #        activation_name = configuration_dict['activation_name']
-    #)
+    network = PFN( (50, 13), ( 25, ),
+            num_hidden_layers_latent = configuration_dict['hidden_layers_latent'],
+            nodes_per_layer_latent = configuration_dict['nodes_latent'],
+            batch_normalization_latent = True,
+            dropout_rate_latent = configuration_dict['dropout_latent'],
+            latent_space_size = configuration_dict['latent_space'],
+            num_hidden_layers_output = configuration_dict['hidden_layers_output'],
+            nodes_per_layer_output = configuration_dict['nodes_latent'],
+            batch_normalization_output = True,
+            dropout_rate_output = configuration_dict['dropout_output'],
+            optimizer_name = 'Nadam',
+            relative_learning_rate = configuration_dict['learning_rate'],
+            relative_learning_rate_decay = configuration_dict['learning_rate_decay'],
+            activation_name = 'prelu'
+    )
 
     #train with default arguments
     network.trainModel( sample, 'jetTagger.h5', 512, 2000) 
