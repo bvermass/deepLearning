@@ -73,7 +73,7 @@ class PFNSampleGenerator :
         number_of_samples = len( parameter_array_list[0] )
 
         #extract signal parameters, convert them to a single array and use this to make a ParameterGenerator
-        signal_parameter_array_list = [ par_array[ par_array != background_default ] for par_array, background_default in zip( parameter_array_list, self.__parameter_background_defaults ) ]
+        signal_parameter_array_list = [ par_array[ abs(par_array - background_default) > 1e-50 ] for par_array, background_default in zip( parameter_array_list, self.__parameter_background_defaults ) ]
         signal_parameter_array_list = [ np.expand_dims( par_array, -1 ) for par_array in signal_parameter_array_list ]
         combined_parameter_array = np.concatenate( signal_parameter_array_list, axis = -1 )
         number_of_signal_samples = len( combined_parameter_array )
