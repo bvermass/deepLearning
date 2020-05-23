@@ -19,13 +19,13 @@ def numberOfEventsPerGB( event_size ):
 
 
 #number of events to read from file in one pass
-def numberOfEventsToRead( uproot_tree, maximum_amount = 50000, maximum_size = 1):
+def numberOfEventsToRead( uproot_tree, maximum_amount = 200000, maximum_size = 1):
     num_events_per_GB = numberOfEventsPerGB( eventSize( uproot_tree ) )
     return min( maximum_size*num_events_per_GB, maximum_amount )
 
 
 #number of splittings in randomization depending on event size 
-def numberOfFileSplittings( uproot_tree, maximum = 50000 ):
+def numberOfFileSplittings( uproot_tree, maximum = 200000 ):
     number_of_events = len( uproot_tree )
     number_of_events_to_read = numberOfEventsToRead( uproot_tree, maximum )
     return max(1, int( round( number_of_events / number_of_events_to_read ) ) )
